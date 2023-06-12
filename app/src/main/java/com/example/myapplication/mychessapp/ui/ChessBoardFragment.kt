@@ -8,17 +8,17 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.myapplication.mychessapp.Position
 import com.example.myapplication.mychessapp.R
 import com.example.myapplication.mychessapp.databinding.ChessboardFragmentLayoutBinding
+import com.example.myapplication.mychessapp.extensions.hideKeyboard
 import com.example.myapplication.mychessapp.viewModel.ChessBoardViewModel
-import com.example.myapplication.mychessapp.viewModel.Position
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class ChessBoardFragment : Fragment() {
     private lateinit var binding: ChessboardFragmentLayoutBinding
-
     private lateinit var chessBoardView: ChessBoardView
     private val chessBoardViewModel: ChessBoardViewModel by viewModels()
 
@@ -32,23 +32,22 @@ class ChessBoardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         chessBoardView = binding.view
         chessBoardView.userInteractionDelegate = chessBoardViewModel
 
         // Observe the starting position LiveData to update the infoText accordingly
         chessBoardViewModel.startingPosition.observe(viewLifecycleOwner) {
             if (it == null) {
-                binding.infoText.text = "Choose starting position"
+                binding.infoText.text = getString(R.string.starting_position)
             } else {
-                binding.infoText.text = "Choose ending position"
+                binding.infoText.text = getString(R.string.target_position)
             }
         }
 
         // Observe the ending position LiveData to update the infoText accordingly
         chessBoardViewModel.endingPosition.observe(viewLifecycleOwner) {
             if (chessBoardViewModel.startingPosition.value == null) {
-                binding.infoText.text = "Choose starting position"
+                binding.infoText.text = getString(R.string.starting_position)
             } else {
                 binding.infoText.text =
                     getString(
@@ -77,7 +76,8 @@ class ChessBoardFragment : Fragment() {
         }
 
         // Set an action listener for the chessBoardSizeFromInput EditText
-        binding.chessBoardSizeFromInput.setOnEditorActionListener { v, actionId, event ->
+        binding.chessBoardSizeFromInput.setOnEditorActionListener { _, actionId, _ ->
+            hideKeyboard()
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.chessBoardSizeFromInput.text.toString().toInt() in 6..16) {
                     binding.view.invalidate()
@@ -98,11 +98,22 @@ class ChessBoardFragment : Fragment() {
         }
 
         // Set an action listener for the maxMovesFromInput EditText
-        binding.maxMovesFromInput.setOnEditorActionListener { v, actionId, event ->
+        binding.maxMovesFromInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                binding.view.invalidate()
-                chessBoardViewModel.setMaxMoves(binding.maxMovesFromInput.text.toString().toInt())
-                binding.view.drawChessboard()
+                hideKeyboard()
+                if (binding.maxMovesFromInput.text.toString().toInt() in 1..5) {
+                    binding.view.invalidate()
+                    chessBoardViewModel.setMaxMoves(
+                        binding.maxMovesFromInput.text.toString().toInt()
+                    )
+                    binding.view.drawChessboard()
+                } else {
+                    Toast.makeText(
+                        activity,
+                        getString(R.string.max_moves_msg),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
             true
         }
@@ -118,10 +129,11 @@ class ChessBoardFragment : Fragment() {
         binding.chessBoardSizeFromInput.text.clear()
         binding.maxMovesFromInput.text.clear()
         chessBoardViewModel.resetChessBoard()
-        binding.view.invalidate()
         chessBoardViewModel.setChessBoardDimension(6)
         chessBoardViewModel.setMaxMoves(3)
         binding.view.setViewModel(chessBoardViewModel)
+        binding.view.invalidate()
         binding.view.drawChessboard()
     }
 }
+

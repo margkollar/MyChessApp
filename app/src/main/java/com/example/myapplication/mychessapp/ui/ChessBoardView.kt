@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import com.example.myapplication.mychessapp.R
 import com.example.myapplication.mychessapp.UserInteractionDelegate
 import com.example.myapplication.mychessapp.viewModel.ChessBoardViewModel
@@ -35,6 +36,10 @@ class ChessBoardView(context: Context?, attrs: AttributeSet?) : View(context, at
         super.onDraw(canvas)
         canvas ?: return
         if (defaultChessboardSize == null) return
+
+        this.layoutParams.height = width
+        this.layoutParams.width = width
+        this.requestLayout()
         val chessBoardSide = width * 0.95f
         cellSide = chessBoardSide / defaultChessboardSize.toFloat()
         dimensionX = (width - chessBoardSide) / 2f
