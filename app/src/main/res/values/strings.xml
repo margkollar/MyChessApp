@@ -3,7 +3,8 @@
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="chessboard_fragment_label">ChessBoard Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
+    <string name="chessboard_size_msg">Enter a number from 6 to 16</string>
+    <string name="no_paths">No paths found! Game over</string>
+    <string name="moves">Moves : %1$s</string>
+    <string name="selected_positions">Selected starting and ending position: %1$d, %2$d, %3$d, %4$d.</string>
 </resources>

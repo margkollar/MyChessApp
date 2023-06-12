@@ -1,7 +1,6 @@
-package com.example.myapplication.mychessapp
+package com.example.myapplication.mychessapp.ui
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -9,6 +8,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import com.example.myapplication.mychessapp.R
 import com.example.myapplication.mychessapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

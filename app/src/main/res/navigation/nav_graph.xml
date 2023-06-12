@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/ChessBoardFragment"
-        android:name="com.example.myapplication.mychessapp.ChessBoardFragment"
+        android:name="com.example.myapplication.mychessapp.ui.ChessBoardFragment"
         android:label="@string/chessboard_fragment_label"
         tools:layout="@layout/chessboard_fragment_layout">
     </fragment>

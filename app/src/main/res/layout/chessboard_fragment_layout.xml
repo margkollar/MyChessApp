@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChessBoardFragment">
+    tools:context=".ui.ChessBoardFragment">
     <view
         android:id="@+id/view"
-        class="com.example.myapplication.mychessapp.ChessBoardView"
+        class="com.example.myapplication.mychessapp.ui.ChessBoardView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/text"
+        app:layout_constraintBottom_toTopOf="@id/info_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/info_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/chessBoardSizeFromInput"
@@ -23,7 +23,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:textAlignment="center"
         android:text="Choose start position"
-        android:lines="1"
         android:clickable="false"/>
     <EditText
         android:id="@+id/chessBoardSizeFromInput"
