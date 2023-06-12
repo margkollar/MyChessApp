@@ -78,20 +78,22 @@ class ChessBoardFragment : Fragment() {
         // Set an action listener for the chessBoardSizeFromInput EditText
         binding.chessBoardSizeFromInput.setOnEditorActionListener { _, actionId, _ ->
             hideKeyboard()
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (binding.chessBoardSizeFromInput.text.toString().toInt() in 6..16) {
-                    binding.view.invalidate()
-                    chessBoardViewModel.setChessBoardDimension(
-                        binding.chessBoardSizeFromInput.text.toString().toInt()
-                    )
-                    binding.view.setViewModel(chessBoardViewModel)
-                    binding.view.drawChessboard()
-                } else {
-                    Toast.makeText(
-                        activity,
-                        getString(R.string.chessboard_size_msg),
-                        Toast.LENGTH_LONG
-                    ).show()
+            if(!binding.chessBoardSizeFromInput.text.isNullOrEmpty()) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if (binding.chessBoardSizeFromInput.text.toString().toInt() in 6..16) {
+                        binding.view.invalidate()
+                        chessBoardViewModel.setChessBoardDimension(
+                            binding.chessBoardSizeFromInput.text.toString().toInt()
+                        )
+                        binding.view.setViewModel(chessBoardViewModel)
+                        binding.view.drawChessboard()
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            getString(R.string.chessboard_size_msg),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
             true
@@ -99,20 +101,22 @@ class ChessBoardFragment : Fragment() {
 
         // Set an action listener for the maxMovesFromInput EditText
         binding.maxMovesFromInput.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                hideKeyboard()
-                if (binding.maxMovesFromInput.text.toString().toInt() in 1..5) {
-                    binding.view.invalidate()
-                    chessBoardViewModel.setMaxMoves(
-                        binding.maxMovesFromInput.text.toString().toInt()
-                    )
-                    binding.view.drawChessboard()
-                } else {
-                    Toast.makeText(
-                        activity,
-                        getString(R.string.max_moves_msg),
-                        Toast.LENGTH_LONG
-                    ).show()
+            hideKeyboard()
+            if(!binding.maxMovesFromInput.text.isNullOrEmpty()) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if (binding.maxMovesFromInput.text.toString().toInt() in 1..5) {
+                        binding.view.invalidate()
+                        chessBoardViewModel.setMaxMoves(
+                            binding.maxMovesFromInput.text.toString().toInt()
+                        )
+                        binding.view.drawChessboard()
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            getString(R.string.max_moves_msg),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
             true
