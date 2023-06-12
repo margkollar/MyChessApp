@@ -5,7 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ChessBoardFragment">
-
+    <view
+        android:id="@+id/view"
+        class="com.example.myapplication.mychessapp.ChessBoardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/chessBoardSizeFromInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        android:text="Choose start position"
+        android:lines="1"
+        android:clickable="false"/>
+    <EditText
+        android:id="@+id/chessBoardSizeFromInput"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/maxMovesFromInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        android:inputType="number"
+        android:lines="1"
+        android:imeOptions="actionDone"
+        android:hint="Enter chessboard size"/>
+    <EditText
+        android:id="@+id/maxMovesFromInput"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/reset_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        android:inputType="number"
+        android:lines="1"
+        android:imeOptions="actionDone"
+        android:hint="Enter max moves"/>
     <ImageButton
         android:id="@+id/reset_btn"
         android:layout_width="50dp"
@@ -13,6 +56,6 @@
         android:src="@android:drawable/ic_menu_revert"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
