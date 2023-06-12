@@ -20,12 +20,14 @@ class ChessBoardView(context: Context?, attrs: AttributeSet?) : View(context, at
     var userInteractionDelegate: UserInteractionDelegate? = null
     var canvas: Canvas? = null
 
+    // Set the ChessBoardViewModel for the view
     fun setViewModel(viewModel: ChessBoardViewModel) {
         this.chessBoardViewModel = viewModel
 
-        // Observe the chessBoardSize property
+        // Observe the chessBoardSize property and update the defaultChessboardSize accordingly
         viewModel.chessBoardDimension.observeForever { size ->
             defaultChessboardSize = size
+            drawChessboard()
         }
     }
 
@@ -52,6 +54,7 @@ class ChessBoardView(context: Context?, attrs: AttributeSet?) : View(context, at
         return true
     }
 
+    // Draw a square at the specified column and row
     private fun drawSquareAt(canvas: Canvas, col: Int, row: Int) {
         val isSquarePositionOddNumber = (col + row) % 2 == 1
         val squareColor = if (isSquarePositionOddNumber) resources.getColor(
@@ -73,6 +76,7 @@ class ChessBoardView(context: Context?, attrs: AttributeSet?) : View(context, at
         )
     }
 
+    // Draw the entire chessboard
     fun drawChessboard() {
         paint.color =
             resources.getColor(androidx.appcompat.R.color.material_blue_grey_800, context.theme)

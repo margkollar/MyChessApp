@@ -36,6 +36,7 @@ class ChessBoardFragment : Fragment() {
         chessBoardView = binding.view
         chessBoardView.userInteractionDelegate = chessBoardViewModel
 
+        // Observe the starting position LiveData to update the infoText accordingly
         chessBoardViewModel.startingPosition.observe(viewLifecycleOwner) {
             if (it == null) {
                 binding.infoText.text = "Choose starting position"
@@ -44,6 +45,7 @@ class ChessBoardFragment : Fragment() {
             }
         }
 
+        // Observe the ending position LiveData to update the infoText accordingly
         chessBoardViewModel.endingPosition.observe(viewLifecycleOwner) {
             if (chessBoardViewModel.startingPosition.value == null) {
                 binding.infoText.text = "Choose starting position"
@@ -58,6 +60,13 @@ class ChessBoardFragment : Fragment() {
                     )
             }
         }
+        chessBoardViewModel.chessBoardDimension.observe(viewLifecycleOwner) {
+            // Redraw the chessboard
+            binding.view.setViewModel(chessBoardViewModel)
+            chessBoardView.drawChessboard()
+
+        }
+        // Observe the noPaths LiveData to update the infoText accordingly
         chessBoardViewModel.noPaths.observe(viewLifecycleOwner) {
             if (it) {
                 binding.infoText.text = getString(R.string.no_paths)
@@ -66,6 +75,8 @@ class ChessBoardFragment : Fragment() {
                     getString(R.string.moves, chessBoardViewModel.stringBuilder.toString())
             }
         }
+
+        // Set an action listener for the chessBoardSizeFromInput EditText
         binding.chessBoardSizeFromInput.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.chessBoardSizeFromInput.text.toString().toInt() in 6..16) {
@@ -80,26 +91,29 @@ class ChessBoardFragment : Fragment() {
                         activity,
                         getString(R.string.chessboard_size_msg),
                         Toast.LENGTH_LONG
-                    )
-                        .show()
+                    ).show()
                 }
             }
             true
         }
+
+        // Set an action listener for the maxMovesFromInput EditText
         binding.maxMovesFromInput.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 binding.view.invalidate()
                 chessBoardViewModel.setMaxMoves(binding.maxMovesFromInput.text.toString().toInt())
                 binding.view.drawChessboard()
-
             }
             true
         }
+
+        // Set a click listener for the resetBtn button
         binding.resetBtn.setOnClickListener {
             reset(binding)
         }
     }
 
+    // Resets the views and the chessboard
     private fun reset(binding: ChessboardFragmentLayoutBinding) {
         binding.chessBoardSizeFromInput.text.clear()
         binding.maxMovesFromInput.text.clear()

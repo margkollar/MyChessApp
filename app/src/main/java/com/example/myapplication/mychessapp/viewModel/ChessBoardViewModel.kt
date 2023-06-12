@@ -1,15 +1,20 @@
 package com.example.myapplication.mychessapp.viewModel
 
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.myapplication.mychessapp.UserInteractionDelegate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ChessBoardViewModel() : ViewModel(), UserInteractionDelegate {
+class ChessBoardViewModel(application: Application) : AndroidViewModel(application),
+    UserInteractionDelegate {
+    private val sharedPreferences =
+        application.getSharedPreferences("ChessBoardPrefs", Context.MODE_PRIVATE)
     private val _startingPosition = MutableLiveData<Position?>()
     val startingPosition: LiveData<Position?> = _startingPosition
     private val _endingPosition = MutableLiveData<Position?>()
@@ -23,14 +28,32 @@ class ChessBoardViewModel() : ViewModel(), UserInteractionDelegate {
 
     val stringBuilder = StringBuilder()
 
+    init {
+        // Retrieve the saved chessboard size and max moves from SharedPreferences
+        val savedChessBoardSize = sharedPreferences.getInt("ChessBoardSize", 6)
+        val savedMaxMoves = sharedPreferences.getInt("MaxMoves", 3)
+
+        // Check if the saved values are different from the default values
+        if (savedChessBoardSize != _chessBoardDimension.value || savedMaxMoves != _maxMoves.value) {
+            // Update the LiveData with the saved values
+            _chessBoardDimension.value = savedChessBoardSize
+            _maxMoves.value = savedMaxMoves
+        }
+    }
+
+    // Sets the chessboard dimension value
     fun setChessBoardDimension(size: Int) {
         _chessBoardDimension.value = size
+        sharedPreferences.edit().putInt("ChessBoardSize", size).apply()
     }
 
+    // Sets the maxMoves value
     fun setMaxMoves(moves: Int) {
         _maxMoves.value = moves
+        sharedPreferences.edit().putInt("MaxMoves", moves).apply()
     }
 
+    // Handles the user's selection of a position
     override fun didSelectPosition(row: Int, col: Int) {
         if (_startingPosition.value == null) {
             _startingPosition.value = Position(row, col)
@@ -40,11 +63,13 @@ class ChessBoardViewModel() : ViewModel(), UserInteractionDelegate {
         }
     }
 
+    // Resets the chessboard by clearing the starting and ending positions
     fun resetChessBoard() {
         _startingPosition.value = null
         _endingPosition.value = null
     }
 
+    // Calculates the next possible moves based on the starting and ending positions
     private fun calculateNextPossibleMoves() {
         val start = startingPosition.value ?: return
         val target = endingPosition.value ?: return
@@ -63,6 +88,7 @@ class ChessBoardViewModel() : ViewModel(), UserInteractionDelegate {
         }
     }
 
+    // Finds all possible knight paths from the start position to the target position
     private suspend fun findKnightPaths(
         start: Position,
         target: Position,
@@ -107,12 +133,11 @@ class ChessBoardViewModel() : ViewModel(), UserInteractionDelegate {
 
         return@withContext paths
     }
-
-
 }
 
 class Position(var col: Int, var row: Int) {
 
+    // Returns a list of possible next positions for the knight
     fun getNext(): List<Position> {
         var nextPositions = mutableListOf<Position>()
         for (direction in Direction.values()) {
@@ -140,12 +165,14 @@ class Position(var col: Int, var row: Int) {
         }.toList()
     }
 
+    // Checks if the position is a valid move on the chessboard
     fun isValidMove(chessBoardDimension: Int): Boolean {
         val validRow = row >= 0 && row <= (chessBoardDimension - 1)
         val validCol = col >= 0 && col <= (chessBoardDimension - 1)
         return validCol && validRow
     }
 
+    // Overrides the equals() function to compare two Position objects
     override fun equals(other: Any?): Boolean {
         val equalRows = row == (other as Position).row
         val equalCols = col == (other as Position).col
@@ -156,6 +183,7 @@ class Position(var col: Int, var row: Int) {
         return col + row
     }
 
+    // Overrides the toString() function to display the position in a algebraic notation
     override fun toString(): String {
         val row = "♞" + ('a' + row).toString()
         val col = (col + 1).toString()
@@ -163,6 +191,7 @@ class Position(var col: Int, var row: Int) {
     }
 }
 
+// Enum class for different directions of the knight's movement
 enum class Direction {
     NORTH, SOUTH, WEST, EAST;
 }
